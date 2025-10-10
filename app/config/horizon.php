@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'use' => 'database',
+    'use' => env('HORIZON_REDIS_CONNECTION', 'default'),
 
     /*
     |--------------------------------------------------------------------------
