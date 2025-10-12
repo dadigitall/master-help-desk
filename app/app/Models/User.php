@@ -76,11 +76,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the companies created by the user.
+     * Get the companies the user belongs to.
      */
     public function companies()
     {
-        return $this->hasMany(Company::class);
+        return $this->belongsToMany(Company::class, 'company_user')
+            ->withTimestamps()
+            ->withPivot('role', 'joined_at');
     }
 
     /**

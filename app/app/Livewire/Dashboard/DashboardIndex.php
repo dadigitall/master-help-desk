@@ -229,18 +229,21 @@ class DashboardIndex extends Component
         
         return Cache::remember($cacheKey, $this->refreshInterval, function() {
             $dateRange = $this->getDateRange();
-            $query = $this->getBaseQuery()->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
+            $query = $this->getBaseQuery()->whereBetween('tickets.created_at', [$dateRange['start'], $dateRange['end']]);
 
-            return $query->selectRaw('priority, COUNT(*) as count')
-                ->groupBy('priority')
-                ->orderByRaw('FIELD(priority, "urgent", "high", "medium", "low")')
+            $totalCount = $query->count();
+
+            return $query->selectRaw('COALESCE(tp.name, "unassigned") as priority, COUNT(*) as count')
+                ->leftJoin('ticket_priorities as tp', 'tickets.priority_id', '=', 'tp.id')
+                ->groupBy('tickets.priority_id', 'tp.name')
+                ->orderByRaw('FIELD(tp.name, "urgent", "high", "medium", "low", "unassigned")')
                 ->get()
-                ->map(function($item) {
+                ->map(function($item) use ($totalCount) {
                     return [
                         'priority' => $item->priority,
                         'label' => ucfirst($item->priority),
                         'count' => $item->count,
-                        'percentage' => $this->calculatePercentage($item->count, $query->count()),
+                        'percentage' => $this->calculatePercentage($item->count, $totalCount),
                         'color' => $this->getPriorityColor($item->priority),
                     ];
                 })
@@ -281,14 +284,14 @@ class DashboardIndex extends Component
         return Cache::remember($cacheKey, $this->refreshInterval, function() {
             $dateRange = $this->getDateRange();
             
-            return User::select('users.*')
+            return User::select('users.id', 'users.name', 'users.email')
                 ->selectRaw('COUNT(tickets.id) as resolved_count')
                 ->selectRaw('AVG(DATEDIFF(tickets.updated_at, tickets.created_at)) as avg_resolution_days')
                 ->join('tickets', 'users.id', '=', 'tickets.assigned_to')
                 ->whereBetween('tickets.updated_at', [$dateRange['start'], $dateRange['end']])
                 ->where('tickets.status', 'resolved')
                 ->whereNotNull('tickets.assigned_to')
-                ->groupBy('users.id')
+                ->groupBy('users.id', 'users.name', 'users.email')
                 ->orderBy('resolved_count', 'desc')
                 ->limit(5)
                 ->get()
@@ -308,7 +311,7 @@ class DashboardIndex extends Component
     public function getRecentTicketsProperty()
     {
         return $this->getBaseQuery()
-            ->with(['project', 'assignedUser'])
+            ->with(['project', 'assignedUser', 'priority'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get()
@@ -318,12 +321,12 @@ class DashboardIndex extends Component
                     'ticket_number' => $ticket->ticket_number,
                     'title' => $ticket->title,
                     'status' => $ticket->status,
-                    'priority' => $ticket->priority,
+                    'priority' => $ticket->priority?->name ?? 'unassigned',
                     'project_name' => $ticket->project->name,
                     'assigned_to' => $ticket->assignedUser?->name,
                     'created_at' => $ticket->created_at->diffForHumans(),
                     'status_color' => $this->getStatusColor($ticket->status),
-                    'priority_color' => $this->getPriorityColor($ticket->priority),
+                    'priority_color' => $this->getPriorityColor($ticket->priority?->name ?? 'unassigned'),
                 ];
             });
     }

@@ -195,11 +195,13 @@ class DashboardCharts extends Component
         
         return Cache::remember($cacheKey, $this->refreshInterval, function() {
             $dateRange = $this->getDateRange();
-            $query = $this->getBaseQuery()->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
+            $query = $this->getBaseQuery()->whereBetween('tickets.created_at', [$dateRange['start'], $dateRange['end']]);
 
-            $priorityData = $query->selectRaw('priority, COUNT(*) as total, SUM(CASE WHEN status = "resolved" THEN 1 ELSE 0 END) as resolved')
-                ->groupBy('priority')
-                ->orderByRaw('FIELD(priority, "urgent", "high", "medium", "low")')
+            $priorityData = $query->selectRaw('COALESCE(tp.name, "unassigned") as priority, COUNT(*) as total, SUM(CASE WHEN tickets.status = "resolved" THEN 1 ELSE 0 END) as resolved')
+                ->leftJoin('ticket_priorities as tp', 'tickets.priority_id', '=', 'tp.id')
+                ->whereBetween('tickets.created_at', [$dateRange['start'], $dateRange['end']])
+                ->groupBy('tickets.priority_id', 'tp.name')
+                ->orderByRaw('FIELD(tp.name, "urgent", "high", "medium", "low", "unassigned")')
                 ->get();
 
             return [
@@ -216,6 +218,7 @@ class DashboardCharts extends Component
                     '#F97316', // high - orange
                     '#F59E0B', // medium - yellow
                     '#10B981', // low - green
+                    '#6B7280', // unassigned - gray
                 ],
             ];
         });

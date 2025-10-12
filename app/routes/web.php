@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthController;
 
 // Language routes
 Route::controller(\App\Http\Controllers\LanguageController::class)->prefix('language')->name('language.')->group(function () {
@@ -9,9 +11,39 @@ Route::controller(\App\Http\Controllers\LanguageController::class)->prefix('lang
     Route::get('/translations/{locale?}', 'translations')->name('translations');
 });
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Authentication routes
+Route::middleware('guest')->controller(AuthController::class)->group(function () {
+    Route::get('/login', 'showLoginForm')->name('login');
+    Route::post('/login', 'login');
+    
+    // Registration routes
+    Route::get('/register', 'showRegistrationForm')->name('register');
+    Route::post('/register', 'register')->name('register.store');
+    
+    // Password reset routes
+    Route::get('/forgot-password', function () {
+        return view('auth.forgot-password');
+    })->name('password.request');
+    
+    Route::post('/forgot-password', function () {
+        // Will be implemented with Laravel Fortify
+        return back()->with('status', 'Lien de réinitialisation envoyé!');
+    })->name('password.email');
+    
+    Route::get('/reset-password/{token}', function ($token) {
+        return view('auth.reset-password', ['token' => $token]);
+    })->name('password.reset');
+    
+    Route::post('/reset-password', function () {
+        // Will be implemented with Laravel Fortify
+        return redirect('/login')->with('status', 'Mot de passe réinitialisé avec succès!');
+    })->name('password.update');
 });
+
+// Logout route
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::middleware([
     'auth:sanctum',
@@ -27,16 +59,25 @@ Route::middleware([
     Route::get('/companies', function () {
         return view('companies');
     })->name('companies')->middleware('permission:companies.view');
+    Route::get('/companies/create', function () {
+        return view('companies.create');
+    })->name('companies.create')->middleware('permission:companies.create');
 
     // Projects routes
     Route::get('/projects', function () {
         return view('projects');
     })->name('projects')->middleware('permission:projects.view');
+    Route::get('/projects/create', function () {
+        return view('projects.create');
+    })->name('projects.create')->middleware('permission:projects.create');
 
     // Tickets routes
     Route::get('/tickets', function () {
         return view('tickets');
     })->name('tickets')->middleware('permission:tickets.view');
+    Route::get('/tickets/create', function () {
+        return view('tickets.create');
+    })->name('tickets.create')->middleware('permission:tickets.create');
 });
 
 // Admin routes
