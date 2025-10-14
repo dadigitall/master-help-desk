@@ -97,14 +97,14 @@
     <body class="font-sans antialiased bg-gray-50">
         <x-banner />
 
-        <!-- Navigation Menu Component -->
-        @livewire('navigation-menu')
+        <!-- Navigation Menu -->
+        @include('navigation-menu')
 
         <!-- Main Content Area -->
-        <main class="relative">
+        <main class="relative transition-all duration-300" style="margin-left: 0;">
             <!-- Page Heading (if exists) -->
             @if (isset($header))
-                <header class="bg-white border-b border-gray-200 shadow-sm">
+                <header class="bg-white border-b border-gray-200 shadow-sm mt-16">
                     <div class="px-4 sm:px-6 lg:px-8 py-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -124,7 +124,7 @@
             @endif
 
             <!-- Page Content -->
-            <div class="px-4 sm:px-6 lg:px-8 py-8">
+            <div class="px-4 sm:px-6 lg:px-8 py-8 mt-16">
                 <!-- Breadcrumb Navigation -->
                 <x-breadcrumb />
 
@@ -197,6 +197,51 @@
                         }, 5000);
                     });
                 }, 100);
+
+                // Synchroniser le contenu principal avec l'état de la sidebar
+                function updateMainContentMargin() {
+                    const sidebar = document.getElementById('sidebar');
+                    const mainContent = document.querySelector('main');
+                    
+                    if (sidebar && mainContent) {
+                        const sidebarOpen = !sidebar.classList.contains('-translate-x-full');
+                        const sidebarCollapsed = sidebar.classList.contains('w-20');
+                        
+                        if (window.innerWidth >= 1024) { // lg breakpoint
+                            if (sidebarOpen) {
+                                mainContent.style.marginLeft = sidebarCollapsed ? '5rem' : '16rem'; // w-20 = 5rem, w-64 = 16rem
+                            } else {
+                                mainContent.style.marginLeft = '0';
+                            }
+                        } else {
+                            mainContent.style.marginLeft = '0';
+                        }
+                    }
+                }
+
+                // Observer les changements de la sidebar
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    const observer = new MutationObserver(() => {
+                        updateMainContentMargin();
+                    });
+                    
+                    observer.observe(sidebar, {
+                        attributes: true,
+                        attributeFilter: ['class']
+                    });
+                }
+
+                // Écouter les événements Livewire pour la sidebar
+                Livewire.on('sidebarStateChanged', () => {
+                    setTimeout(updateMainContentMargin, 100);
+                });
+
+                // Mettre à jour au redimensionnement
+                window.addEventListener('resize', updateMainContentMargin);
+                
+                // Initialiser
+                setTimeout(updateMainContentMargin, 200);
             });
 
             // Smooth scroll for anchor links

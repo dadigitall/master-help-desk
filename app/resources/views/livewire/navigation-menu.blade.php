@@ -220,18 +220,29 @@
                     <i class="fas fa-bars text-xl"></i>
                 </button>
 
+                <!-- Navigation Links -->
+                <div class="hidden md:flex space-x-4">
+                    <a href="{{ route('dashboard') }}" class="px-3 py-2 text-sm font-medium {{ request()->routeIs('dashboard') ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 hover:text-gray-700' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('tickets') }}" class="px-3 py-2 text-sm font-medium {{ request()->routeIs('tickets*') ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 hover:text-gray-700' }}">
+                        Tickets
+                    </a>
+                    <a href="{{ route('projects') }}" class="px-3 py-2 text-sm font-medium {{ request()->routeIs('projects*') ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 hover:text-gray-700' }}">
+                        Projects
+                    </a>
+                    <a href="{{ route('companies') }}" class="px-3 py-2 text-sm font-medium {{ request()->routeIs('companies*') ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 hover:text-gray-700' }}">
+                        Companies
+                    </a>
+                </div>
+
                 <!-- Search Bar -->
                 <div class="hidden md:block">
                     <div class="relative">
-                        <input type="text" 
-                               placeholder="Search tickets, projects, or users..." 
-                               class="w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        /* Lines 226-230 omitted */
                     </div>
                 </div>
-            </div>
-
-            <!-- Right Section -->
+            </div>            <!-- Right Section -->
             <div class="flex items-center space-x-4">
                 <!-- Quick Actions -->
                 <button class="relative text-gray-600 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-lg transition-colors">
