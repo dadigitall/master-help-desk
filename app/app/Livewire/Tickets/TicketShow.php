@@ -72,7 +72,7 @@ class TicketShow extends Component
 
     public function addComment()
     {
-        $this->authorize('tickets.comment');
+        $this->authorize('comments.create');
 
         $this->validate([
             'newComment' => 'required|string|min:3|max:2000',
@@ -103,7 +103,7 @@ class TicketShow extends Component
 
     public function addChatMessage()
     {
-        $this->authorize('tickets.chat');
+        $this->authorize('chat.send');
 
         $this->validate([
             'newChatMessage' => 'required|string|min:1|max:500',
@@ -251,7 +251,7 @@ class TicketShow extends Component
             return collect();
         }
 
-        return User::whereHas('companies', function($query) use ($this->ticket) {
+        return User::whereHas('companies', function($query) {
             $query->where('companies.id', $this->ticket->project->company_id);
         })->orderBy('name')->get();
     }
@@ -263,12 +263,12 @@ class TicketShow extends Component
 
     public function getCanCommentProperty()
     {
-        return auth()->user()->can('tickets.comment');
+        return auth()->user()->can('comments.create');
     }
 
     public function getCanChatProperty()
     {
-        return auth()->user()->can('tickets.chat');
+        return auth()->user()->can('chat.send');
     }
 
     public function getCanDeleteProperty()
@@ -299,6 +299,9 @@ class TicketShow extends Component
             'statusOptions' => $this->statusOptions,
             'users' => $this->users,
             'ticketStats' => $this->ticketStats,
+            'canEdit' => $this->canEdit,
+            'canComment' => $this->canComment,
+            'canChat' => $this->canChat,
         ]);
     }
 }

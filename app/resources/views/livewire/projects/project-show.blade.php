@@ -39,8 +39,8 @@
                                     <i class="fas fa-star text-xl {{ $isFavorite ? 'text-yellow-500' : 'text-gray-400' }}"></i>
                                 </button>
                                 <!-- Status Badge -->
-                                <span class="px-3 py-1 text-sm font-semibold rounded-full {{ $project->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $project->is_active ? 'Active' : 'Inactive' }}
+                                <span class="px-3 py-1 text-sm font-semibold rounded-full {{ $project->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $project->active ? 'Active' : 'Inactive' }}
                                 </span>
                                 <!-- Close Button -->
                                 <button wire:click="closeModal" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">

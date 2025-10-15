@@ -50,7 +50,7 @@ class CompanyEdit extends Component
         $this->email = $this->company->email;
         $this->phone = $this->company->phone;
         $this->address = $this->company->address;
-        $this->is_active = $this->company->is_active;
+        $this->is_active = $this->company->active;
         
         $this->showModal = true;
     }

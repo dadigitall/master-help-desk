@@ -47,7 +47,7 @@ class CompanyIndex extends Component
                     ->orWhere('phone', 'like', '%' . $this->search . '%');
             })
             ->when(!$this->showInactive, function ($query) {
-                $query->where('is_active', true);
+                $query->where('active', true);
             })
             ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
@@ -72,7 +72,7 @@ class CompanyIndex extends Component
         $this->authorize('companies.edit');
 
         $company->update([
-            'is_active' => !$company->is_active,
+            'active' => !$company->active,
         ]);
 
         $this->dispatch('companyUpdated');

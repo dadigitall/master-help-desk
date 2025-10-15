@@ -56,7 +56,7 @@ class ProjectEdit extends Component
         $this->prefix = $this->project->prefix;
         $this->color = $this->project->color;
         $this->company_id = $this->project->company_id;
-        $this->is_active = $this->project->is_active;
+        $this->is_active = $this->project->active;
         
         $this->showModal = true;
     }
@@ -133,7 +133,7 @@ class ProjectEdit extends Component
     public function getCompaniesProperty()
     {
         return auth()->user()->companies()
-            ->where('is_active', true)
+            ->where('active', true)
             ->orderBy('name')
             ->get();
     }

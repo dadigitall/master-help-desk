@@ -44,10 +44,6 @@ class TicketIndex extends Component
         'ticketStatusChanged' => '$refresh',
     ];
 
-    public function mount()
-    {
-        $this->authorize('tickets.view');
-    }
 
     public function render()
     {
@@ -91,7 +87,7 @@ class TicketIndex extends Component
 
         // Get filter options
         $availableProjects = Project::whereIn('id', $projects)
-            ->where('is_active', true)
+            ->where('active', true)
             ->orderBy('name')
             ->get();
 
@@ -121,6 +117,9 @@ class TicketIndex extends Component
             'users' => $availableUsers,
             'statusOptions' => $statusOptions,
             'priorityOptions' => $priorityOptions,
+            'canCreate' => auth()->user()->can('tickets.create'),
+            'canEdit' => auth()->user()->can('tickets.edit'),
+            'canDelete' => auth()->user()->can('tickets.delete'),
         ]);
     }
 
@@ -237,6 +236,11 @@ class TicketIndex extends Component
             'type' => 'success',
             'message' => 'Ticket deleted successfully'
         ]);
+    }
+
+    public function mount()
+    {
+        $this->authorize('tickets.view');
     }
 
     public function getCanCreateProperty()

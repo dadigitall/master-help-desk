@@ -137,8 +137,8 @@
                                         <i class="fas fa-star {{ $this->isFavorite($project->id) ? 'text-yellow-500' : '' }}"></i>
                                     </button>
                                     <!-- Status Badge -->
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $project->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $project->is_active ? 'Active' : 'Inactive' }}
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $project->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $project->active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </div>
                             </div>
@@ -197,8 +197,8 @@
                                 @if ($canEdit)
                                     <div class="flex items-center space-x-2">
                                         <button wire:click="toggleActive({{ $project->id }})" 
-                                                class="text-sm {{ $project->is_active ? 'text-orange-600 hover:text-orange-800' : 'text-green-600 hover:text-green-800' }}">
-                                            {{ $project->is_active ? 'Deactivate' : 'Activate' }}
+                                                class="text-sm {{ $project->active ? 'text-orange-600 hover:text-orange-800' : 'text-green-600 hover:text-green-800' }}">
+                                            {{ $project->active ? 'Deactivate' : 'Activate' }}
                                         </button>
                                         @if ($canDelete && $project->tickets_count === 0)
                                             <button wire:click="deleteProject({{ $project->id }})" 
@@ -262,8 +262,8 @@
                                     <div class="text-sm text-orange-600">{{ $project->open_tickets_count }} open</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $project->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $project->is_active ? 'Active' : 'Inactive' }}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $project->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $project->active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -279,7 +279,7 @@
                                             </button>
                                             <button wire:click="toggleActive({{ $project->id }})" 
                                                     class="text-orange-600 hover:text-orange-900">
-                                                {{ $project->is_active ? 'Deactivate' : 'Activate' }}
+                                                {{ $project->active ? 'Deactivate' : 'Activate' }}
                                             </button>
                                         @endif
                                         @if ($canDelete && $project->tickets_count === 0)

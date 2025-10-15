@@ -125,7 +125,7 @@ class TicketCreate extends Component
             ->get()
             ->pluck('projects')
             ->flatten()
-            ->where('is_active', true)
+            ->where('active', true)
             ->sortBy('name');
     }
 

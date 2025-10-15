@@ -68,7 +68,7 @@ class ProjectIndex extends Component
                 $query->where('company_id', $this->selectedCompany);
             })
             ->when(!$this->showInactive, function ($query) {
-                $query->where('is_active', true);
+                $query->where('active', true);
             })
             ->when($this->showFavoritesOnly, function ($query) use ($user) {
                 $query->whereHas('favoriteProjects', function($query) use ($user) {
@@ -84,7 +84,7 @@ class ProjectIndex extends Component
 
         // Get companies for filter dropdown
         $availableCompanies = Company::whereIn('id', $companies)
-            ->where('is_active', true)
+            ->where('active', true)
             ->orderBy('name')
             ->get();
 
@@ -109,7 +109,7 @@ class ProjectIndex extends Component
         $this->authorize('projects.edit');
 
         $project->update([
-            'is_active' => !$project->is_active,
+            'active' => !$project->active,
         ]);
 
         $this->dispatch('projectUpdated');

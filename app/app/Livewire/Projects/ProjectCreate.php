@@ -132,7 +132,7 @@ class ProjectCreate extends Component
     public function getCompaniesProperty()
     {
         return auth()->user()->companies()
-            ->where('is_active', true)
+            ->where('active', true)
             ->orderBy('name')
             ->get();
     }

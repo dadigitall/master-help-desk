@@ -127,8 +127,8 @@
                                 <div class="text-sm text-gray-900">{{ $company->phone ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $company->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $company->is_active ? 'Active' : 'Inactive' }}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $company->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $company->active ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

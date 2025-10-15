@@ -41,8 +41,8 @@
                                     </div>
                                     <div class="ml-4">
                                         <h4 class="text-xl font-semibold text-gray-900">{{ $company->name }}</h4>
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $company->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $company->is_active ? 'Active' : 'Inactive' }}
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $company->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $company->active ? 'Active' : 'Inactive' }}
                                         </span>
                                     </div>
                                 </div>
@@ -82,8 +82,8 @@
                                                             <p class="text-xs text-gray-500">{{ $project->user->name }} • {{ $project->prefix }}</p>
                                                         </div>
                                                     </div>
-                                                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $project->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                        {{ $project->is_active ? 'Active' : 'Inactive' }}
+                                                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $project->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                        {{ $project->active ? 'Active' : 'Inactive' }}
                                                     </span>
                                                 </div>
                                                 @if ($project->description)
@@ -113,11 +113,11 @@
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-sm text-gray-500">Active Projects</span>
-                                        <span class="text-sm font-medium text-green-600">{{ $company->projects->where('is_active', true)->count() }}</span>
+                                        <span class="text-sm font-medium text-green-600">{{ $company->projects->where('active', true)->count() }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-sm text-gray-500">Inactive Projects</span>
-                                        <span class="text-sm font-medium text-red-600">{{ $company->projects->where('is_active', false)->count() }}</span>
+                                        <span class="text-sm font-medium text-red-600">{{ $company->projects->where('active', false)->count() }}</span>
                                     </div>
                                 </div>
                             </div>

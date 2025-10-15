@@ -252,7 +252,7 @@
                                                     </div>
                                                 @endif
                                                 <div class="flex-1 max-w-xs">
-                                                    <div class="{{ $chat->user_id === auth()->id() ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' } rounded-lg px-3 py-2">
+                                                    <div class="{{ $chat->user_id === auth()->id() ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' }} rounded-lg px-3 py-2">
                                                         <p class="text-sm">{{ $chat->message }}</p>
                                                     </div>
                                                     <p class="text-xs text-gray-500 mt-1 {{ $chat->user_id === auth()->id() ? 'text-right' : '' }}">

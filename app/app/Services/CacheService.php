@@ -86,8 +86,8 @@ class CacheService
             
             return [
                 'total' => $query->count(),
-                'active' => $query->clone()->where('is_active', true)->count(),
-                'inactive' => $query->clone()->where('is_active', false)->count(),
+                'active' => $query->clone()->where('active', true)->count(),
+                'inactive' => $query->clone()->where('active', false)->count(),
                 'created_this_month' => $query->clone()->whereMonth('created_at', now()->month)
                                                 ->whereYear('created_at', now()->year)
                                                 ->count(),
@@ -163,7 +163,7 @@ class CacheService
                     ->get()
                     ->toArray(),
                 'companies' => DB::table('companies')
-                    ->where('is_active', true)
+                    ->where('active', true)
                     ->orderBy('name')
                     ->get()
                     ->toArray(),
