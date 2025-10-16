@@ -52,7 +52,7 @@ class ProjectIndex extends Component
         $user = auth()->user();
         
         // Get user's companies for filtering
-        $companies = $user->companies()->pluck('id')->toArray();
+        $companies = $user->companies()->pluck('companies.id')->toArray();
         
         $projectsQuery = Project::query()
             ->whereIn('company_id', $companies)
@@ -91,6 +91,9 @@ class ProjectIndex extends Component
         return view('livewire.projects.project-index', [
             'projects' => $projects,
             'companies' => $availableCompanies,
+            'canCreate' => $this->canCreate,
+            'canEdit' => $this->canEdit,
+            'canDelete' => $this->canDelete,
         ]);
     }
 
